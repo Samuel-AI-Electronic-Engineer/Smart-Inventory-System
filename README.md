@@ -1,3 +1,5 @@
-# Gestión de Inventario con IA.
-Dentro del subcampo de la Inteligencia Artificial se destaca el uso de la Vision Artificial que nos permite obtener datos importantes por medio de dispositivos , maquinas especializadas y integraciones IoT para extraer datos mediante analisis de imagenes y video en un ambiente industrial o cadena de suministro en un sistema de administracion de inventario.
-Este modelo de uso nos permite identificar, ordenar y clasificar productos en funcion de sus caracteristicas, patrones y precios, mejorando el entorno de produccion, obtimizando la gestion de inventarios y la experiencia del cliente.   
+# Gestión de Inventario con IA
+
+Dentro del subcampo de la Inteligencia Artificial se destaca el uso de la Visión Artificial que nos permite obtener datos importantes por medio de dispositivos, máquinas especializadas e integración de tecnologías avanzadas.
+
+Este modelo de uso nos permite identificar, ordenar y clasificar productos en función de sus características, patrones y precios, mejorando el entorno de producción optimizando la gestión de inventario.
