@@ -1,0 +1,48 @@
+# SmartInventoryAI Code Ownership
+
+# Global owner
+
+* @Samuel-AI-Electronic-Engineer
+
+# Specific component owners
+
+/agents/ @Samuel-AI-Electronic-Engineer
+/vision/ @Samuel-AI-Electronic-Engineer
+/iot/ @Samuel-AI-Electronic-Engineer
+/cloud/ @Samuel-AI-Electronic-Engineer
+/database/ @Samuel-AI-Electronic-Engineer
+/api/ @Samuel-AI-Electronic-Engineer
+/mlops/ @Samuel-AI-Electronic-Engineer
+/tests/ @Samuel-AI-Electronic-Engineer
+
+# Configuration files
+
+.github/ @Samuel-AI-Electronic-Engineer
+docker/ @Samuel-AI-Electronic-Engineer
+.env.example @Samuel-AI-Electronic-Engineer
+.gitignore @Samuel-AI-Electronic-Engineer
+requirements.txt @Samuel-AI-Electronic-Engineer
+
+# Documentation
+
+*.md @Samuel-AI-Electronic-Engineer
+README.md @Samuel-AI-Electronic-Engineer
+CONTRIBUTING.md @Samuel-AI-Electronic-Engineer
+SECURITY.md @Samuel-AI-Electronic-Engineer
+
+# Build and deployment
+
+.github/workflows/ @Samuel-AI-Electronic-Engineer
+Dockerfile* @Samuel-AI-Electronic-Engineer
+docker-compose.yml @Samuel-AI-Electronic-Engineer
+
+# CI/CD configuration
+
+.github/workflows/ci.yml @Samuel-AI-Electronic-Engineer
+.github/workflows/model_eval.yml @Samuel-AI-Electronic-Engineer
+.github/workflows/deploy.yml @Samuel-AI-Electronic-Engineer
+
+# Issue and PR templates
+
+.github/ISSUE_TEMPLATE/ @Samuel-AI-Electronic-Engineer
+.github/PULL_REQUEST_TEMPLATE.md @Samuel-AI-Electronic-Engineer

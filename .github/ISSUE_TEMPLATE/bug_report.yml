@@ -1,0 +1,146 @@
+name: 🐛 Bug Report
+description: Report a bug in SmartInventoryAI
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please fill out the form below to help us identify and fix the issue.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of SmartInventoryAI is affected?
+      options:
+        - "🔍 Vision (YOLOv8 detection)"
+        - "🤖 Agents (LangGraph orchestration)"
+        - "📡 IoT (ESP32-CAM firmware)"
+        - "☁️ Cloud (GCP integration)"
+        - "🗄️ Database (PostgreSQL queries)"
+        - "🌐 API (FastAPI endpoints)"
+        - "🐳 Docker (containerization)"
+        - "📊 MLOps (training pipeline)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How critical is this bug?
+      options:
+        - "🔴 Critical (system down, data loss)"
+        - "🟠 High (major feature broken)"
+        - "🟡 Medium (feature degraded)"
+        - "🟢 Low (minor issue, workaround exists)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What happened? Describe the issue clearly.
+      placeholder: "Provide a clear description of the bug..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the bug?
+      placeholder: |
+        1. Configure WiFi SSID/password in Initial_Version.ino
+        2. Upload firmware to ESP32-CAM
+        3. Connect to MQTT broker at 192.168.1.100
+        4. Observe that images are not publishing...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead?
+      placeholder: "Images should publish to inventory/camera/image topic every 3 seconds..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+      placeholder: "Images are not being published. MQTT connection shows connected but no data sent..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: yolo_version
+    attributes:
+      label: YOLOv8 Model Version
+      description: Which YOLOv8 version are you using?
+      options:
+        - "v8.0 (YOLOv8n - Nano)"
+        - "v8.0 (YOLOv8s - Small)"
+        - "v8.0 (YOLOv8m - Medium)"
+        - "v8.1"
+        - "v8.2"
+        - "Custom trained model"
+        - "Not applicable"
+    validations:
+      required: false
+
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware Configuration
+      description: What hardware are you using?
+      placeholder: |
+        - ESP32-CAM: AI Thinker ESP32-CAM
+        - Servo Motors: SG90 x3
+        - Power Supply: 5V/2A USB
+        - Raspberry Pi 4B (MQTT broker)
+        - Ubuntu 22.04 (backend)
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs / Serial Output
+      description: Paste relevant logs from Serial Monitor (115200 baud)
+      placeholder: |
+        ```
+        Connecting to WiFi: my-network
+        WiFi connected. IP: 192.168.1.50
+        Signal strength: -45 dBm
+        Connecting to MQTT broker: 192.168.1.100:1883
+        MQTT connected
+        ```
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information?
+      placeholder: "I'm using a custom YOLOv8 model trained on warehouse products..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-Submission Checklist
+      options:
+        - label: "I've checked existing issues to avoid duplicates"
+          required: true
+        - label: "I've provided clear steps to reproduce"
+          required: true
+        - label: "I've included relevant logs/error messages"
+          required: false

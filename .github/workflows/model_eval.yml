@@ -1,0 +1,213 @@
+name: 🤖 Model Evaluation Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'vision/**'
+      - 'mlops/**'
+      - 'models/**'
+      - 'requirements.txt'
+      - '.github/workflows/model_eval.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'vision/**'
+      - 'mlops/**'
+      - 'models/**'
+
+jobs:
+  evaluate-model:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install tensorboard
+
+      - name: 📊 Download evaluation dataset
+        run: |
+          # Check if test dataset exists, otherwise create synthetic one
+          if [ ! -d "data/test" ]; then
+            echo "Creating test directory structure..."
+            mkdir -p data/test/images
+            mkdir -p data/test/labels
+            echo "ℹ️ Using local test dataset or provide via artifacts"
+          fi
+
+      - name: 🤖 Run YOLOv8 Model Evaluation
+        id: eval
+        run: |
+          python << 'EOF'
+          import os
+          import json
+          from ultralytics import YOLO
+          
+          # Load model
+          print("📦 Loading YOLOv8 model...")
+          model = YOLO('models/yolov8s.pt')
+          
+          # Run validation
+          print("🔍 Running model evaluation...")
+          try:
+              # Validate on test dataset
+              results = model.val(
+                  data='data/warehouse.yaml',  # Update with your dataset config
+                  imgsz=640,
+                  batch=16,
+                  conf=0.45,
+                  iou=0.5,
+                  device=0,
+                  plots=True
+              )
+              
+              # Extract metrics
+              metrics = {
+                  'mAP_50': float(results.box.map50) if hasattr(results.box, 'map50') else 0.0,
+                  'mAP_50_95': float(results.box.map) if hasattr(results.box, 'map') else 0.0,
+                  'precision': float(results.box.mp) if hasattr(results.box, 'mp') else 0.0,
+                  'recall': float(results.box.mr) if hasattr(results.box, 'mr') else 0.0,
+                  'model': 'yolov8s',
+                  'dataset': 'warehouse_products',
+                  'config': {
+                      'confidence_threshold': 0.45,
+                      'iou_threshold': 0.5,
+                      'image_size': 640,
+                      'batch_size': 16
+                  }
+              }
+              
+              print(f"\n✅ Model Evaluation Results:")
+              print(f"   mAP@0.5: {metrics['mAP_50']:.4f}")
+              print(f"   mAP@0.5:0.95: {metrics['mAP_50_95']:.4f}")
+              print(f"   Precision: {metrics['precision']:.4f}")
+              print(f"   Recall: {metrics['recall']:.4f}")
+              
+              # Save metrics to file
+              with open('eval_metrics.json', 'w') as f:
+                  json.dump(metrics, f, indent=2)
+              
+              # Set output for next step
+              print(f"::set-output name=mAP_50::{metrics['mAP_50']:.4f}")
+              print(f"::set-output name=mAP_50_95::{metrics['mAP_50_95']:.4f}")
+              print(f"::set-output name=precision::{metrics['precision']:.4f}")
+              print(f"::set-output name=recall::{metrics['recall']:.4f}")
+              
+              # Check thresholds
+              if metrics['mAP_50'] < 0.75:
+                  print(f"⚠️  Warning: mAP@0.5 ({metrics['mAP_50']:.4f}) below acceptable threshold (0.75)")
+              if metrics['mAP_50_95'] < 0.60:
+                  print(f"⚠️  Warning: mAP@0.5:0.95 ({metrics['mAP_50_95']:.4f}) below acceptable threshold (0.60)")
+                  
+          except Exception as e:
+              print(f"❌ Evaluation failed: {e}")
+              import traceback
+              traceback.print_exc()
+              exit(1)
+          EOF
+
+      - name: 📈 Compare with baseline
+        id: compare
+        run: |
+          python << 'EOF'
+          import json
+          import os
+          
+          # Load current metrics
+          with open('eval_metrics.json', 'r') as f:
+              current = json.load(f)
+          
+          # Compare with baseline (if exists)
+          baseline_path = 'mlops/baseline_metrics.json'
+          if os.path.exists(baseline_path):
+              with open(baseline_path, 'r') as f:
+                  baseline = json.load(f)
+              
+              mAP_50_diff = ((current['mAP_50'] - baseline['mAP_50']) / baseline['mAP_50'] * 100)
+              mAP_95_diff = ((current['mAP_50_95'] - baseline['mAP_50_95']) / baseline['mAP_50_95'] * 100)
+              
+              print("📊 Comparison with Baseline:")
+              print(f"   mAP@0.5: {current['mAP_50']:.4f} (baseline: {baseline['mAP_50']:.4f}, {mAP_50_diff:+.2f}%)")
+              print(f"   mAP@0.5:0.95: {current['mAP_50_95']:.4f} (baseline: {baseline['mAP_50_95']:.4f}, {mAP_95_diff:+.2f}%)")
+              
+              with open('eval_comparison.json', 'w') as f:
+                  json.dump({
+                      'current': current,
+                      'baseline': baseline,
+                      'mAP_50_diff': mAP_50_diff,
+                      'mAP_95_diff': mAP_95_diff
+                  }, f, indent=2)
+          else:
+              print("ℹ️  No baseline metrics found, skipping comparison")
+          EOF
+
+      - name: 📤 Upload evaluation metrics
+        uses: actions/upload-artifact@v3
+        with:
+          name: model-evaluation-metrics
+          path: |
+            eval_metrics.json
+            eval_comparison.json
+          retention-days: 30
+
+      - name: 📸 Upload evaluation plots
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: model-evaluation-plots
+          path: runs/detect/val*/
+          retention-days: 30
+
+      - name: 💬 Post evaluation results to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const metrics = JSON.parse(fs.readFileSync('eval_metrics.json', 'utf8'));
+            
+            let comment = `## 🤖 Model Evaluation Results\n\n`;
+            comment += `| Metric | Value | Status |\n`;
+            comment += `|--------|-------|--------|\n`;
+            comment += `| mAP@0.5 | ${metrics.mAP_50.toFixed(4)} | ${ metrics.mAP_50 >= 0.75 ? '✅' : '⚠️'} |\n`;
+            comment += `| mAP@0.5:0.95 | ${metrics.mAP_50_95.toFixed(4)} | ${ metrics.mAP_50_95 >= 0.60 ? '✅' : '⚠️'} |\n`;
+            comment += `| Precision | ${metrics.precision.toFixed(4)} | ✅ |\n`;
+            comment += `| Recall | ${metrics.recall.toFixed(4)} | ✅ |\n`;
+            comment += `\n**Model:** ${metrics.model}\n`;
+            comment += `**Configuration:** Conf=${metrics.config.confidence_threshold}, IoU=${metrics.config.iou_threshold}, ImgSz=${metrics.config.image_size}\n`;
+            
+            // Check if comparison exists
+            try {
+              const comparison = JSON.parse(fs.readFileSync('eval_comparison.json', 'utf8'));
+              comment += `\n### Baseline Comparison\n`;
+              comment += `- mAP@0.5: ${comparison.mAP_50_diff > 0 ? '📈' : '📉'} ${comparison.mAP_50_diff.toFixed(2)}%\n`;
+              comment += `- mAP@0.5:0.95: ${comparison.mAP_95_diff > 0 ? '📈' : '📉'} ${comparison.mAP_95_diff.toFixed(2)}%\n`;
+            } catch (e) {
+              // Comparison not available
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: ✅ Evaluation Summary
+        run: |
+          echo "### Model Evaluation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat eval_metrics.json >> $GITHUB_STEP_SUMMARY
