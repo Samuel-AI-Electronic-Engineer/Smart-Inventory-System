@@ -125,13 +125,12 @@ SmartInventoryAI automates inventory management through:
 |----------|-----------|---------|---------|
 | **Hardware** | ESP32-CAM | - | Real-time image capture (OV2640 sensor) |
 | | Raspberry Pi 4B | - | Local IoT gateway + MQTT broker |
-| | Servo Motors | - | Mechanical actuators for manipulation |
 | **AI/ML** | YOLOv8 | v8.0+ | Real-time object detection (n/s/m/l/x) |
 | | Custom Dataset | - | Warehouse products (labeled with Roboflow) |
 | | Preprocessing | - | Frame normalization & augmentation |
 | **Multi-Agents** | LangGraph | v0.1+ | Stateful agent orchestration |
 | | LangChain | v0.1+ | AI framework & tools |
-| | Custom Agents | - | InventoryAgent, AlertAgent, AuditAgent, Orchestrator |
+| | Custom Agents | - | Inventory-Agent, Alert-Agent, Audit-Agent,Orchestrator |
 | **Cloud** | GCP Cloud Run | - | Containerized serverless services |
 | | GCP Pub/Sub | - | IoT event streaming |
 | | GCP Cloud Storage | - | Model artifacts + detection archives |

@@ -1,10 +1,14 @@
 /*
- * SmartInventoryAI - ESP32-CAM IoT Gateway Firmware
+ * Smart-Inventory-System
+ * Proyecto de sistema de inventario inteligente con análisis de imágenes en tiempo real
+ * usando ESP32-CAM, MQTT, YOLOv8 y LangGraph.
+ * Descripción:
  *
- * Descripción / Description:
  * Firmware para captura de imágenes en tiempo real usando ESP32-CAM
  * Publícalas vía MQTT hacia el broker en Raspberry Pi para procesamiento
  * con YOLOv8 y análisis multiagente con LangGraph.
+ *
+ * Description:
  *
  * Firmware for real-time image capture using ESP32-CAM.
  * Publishes images via MQTT to Raspberry Pi broker for processing
@@ -393,11 +397,6 @@ void loop()
           }
         }
       }
-
-      // ============================================================================
-      // UTILITY FUNCTIONS
-      // ============================================================================
-
       void updateTelemetry()
       {
         telemetry.uptime = millis();
