@@ -1,4 +1,4 @@
-# 🚀 SmartInventoryAI — Edge Computer Vision meets Multi-Agent AI
+# SmartInventoryAI
 
 ### Status & Technology Stack
 
@@ -25,7 +25,7 @@
 
 ---
 
-## 📋 Overview
+## Overview
 
 **SmartInventoryAI** is a production-grade industrial inventory management system combining **real-time computer vision** with **multi-agent AI orchestration** to automate product counting and classification in warehouses and distribution centers.
 
@@ -33,20 +33,20 @@ Within artificial intelligence, **computer vision** excels at extracting critica
 
 ---
 
-## 🏭 The Problem
+## The Problem
 
 Manual warehouse inventory systems cause **~30% efficiency loss** (industry benchmarks). This results in:
 
-- ⏱️ **Wasted time:** Manual counts take hours/days
-- 💰 **Costly errors:** Physical-to-record discrepancies (~15-20%)
-- 🔄 **Operational delays:** Slow reorder decision cycles
-- 📊 **No real-time visibility:** Data delays of hours/days
+- **Wasted time:** Manual counts take hours/days
+- **Costly errors:** Physical-to-record discrepancies (~15-20%)
+- **Operational delays:** Slow reorder decision cycles
+- **No real-time visibility:** Data delays of hours/days
 
 **Global statistic:** Inventory distortion costs companies **$1.1 trillion USD annually** (IHL Group, 2024).
 
 ---
 
-## ✨ The Solution
+## The Solution
 
 SmartInventoryAI automates inventory management through:
 
@@ -60,28 +60,28 @@ SmartInventoryAI automates inventory management through:
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    EDGE LAYER (Warehouse)                           │
 ├─────────────────────────────────────────────────────────────────────┤
-│  
-│  [ESP32-CAM #1]   [ESP32-CAM #2]   [ESP32-CAM #N]
-│   (OV2640)          (OV2640)         (OV2640)
-│     │                 │                │
-│     └─────────────────┼─────────────────┘
-│                       │
-│           📡 WiFi 802.11b/g/n
-│                       │
-│           ┌───────────▼────────────┐
-│           │  Raspberry Pi 4B       │
-│           │  (MQTT Broker Local)   │
-│           │  + Edge Preprocessing  │
-│           └───────────┬────────────┘
-│                       │
-│           🌐 Internet / VPN
-│
+│                                                                     |
+│  [ESP32-CAM #1]   [ESP32-CAM #2]   [ESP32-CAM #N]                   |
+│   (OV2640)          (OV2640)         (OV2640)                       |
+│     │                 │                 |                           |
+│     └─────────────────┼─────────────────┘                           |
+│                       │                                             |
+│               WiFi 802.11b/g/n                                      |     
+│                       │                                             |
+│           ┌───────────▼────────────┐                                |
+│           │  Raspberry Pi 4B       │                                |
+│           │  (MQTT Broker Local)   │                                |
+│           │  + Edge Preprocessing  │                                |
+│           └───────────┬────────────┘                                |
+│                       │                                             |
+│                Internet / VPN                                       |
+│                                                                     |
 └─────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -90,7 +90,7 @@ SmartInventoryAI automates inventory management through:
 │
 │  ┌─────────────────────────────────────────────────────────────┐
 │  │         GCP Cloud Pub/Sub (Event Streaming)                 │
-│  │    ← Detection Events from IoT │ Agent Telemetry →         │
+│  │    ← Detection Events from IoT │ Agent Telemetry →          │
 │  └────────────┬─────────────────────────────────────┬──────────┘
 │               │                                     │
 │  ┌────────────▼──────────┐  ┌──────────────────────▼───────┐
@@ -99,12 +99,12 @@ SmartInventoryAI automates inventory management through:
 │  └────────────┬──────────┘  └──────────────────────┬───────┘
 │               │                                     │
 │  ┌────────────▼─────────────────────────────────────▼───────┐
-│  │           Multi-Agent Orchestration Layer                 │
-│  │                                                            │
-│  │  [InventoryAgent]──→ Stock Count Updates                 │
-│  │  [AlertAgent]──────→ Reorder Triggers                    │
-│  │  [AuditAgent]──────→ Audit Logs & Reports                │
-│  │  [OrchestratorAgent]→ State Management                    │
+│  │           Multi-Agent Orchestration Layer                │
+│  │                                                          │
+│  │  [Inventory-Agent]──→ Stock Count Updates                │
+│  │  [Alert-Agent]──────→ Reorder Triggers                   │
+│  │  [Audit-Agent]──────→ Audit Logs & Reports               │
+│  │  [Orchestrator-Agent]→ State Management                  │
 │  └────────────┬────────────────────────────────────┬────────┘
 │               │                                    │
 │  ┌────────────▼─────────────┐  ┌─────────────────▼────────┐
@@ -119,7 +119,7 @@ SmartInventoryAI automates inventory management through:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Component | Version | Purpose |
 |----------|-----------|---------|---------|
@@ -144,43 +144,43 @@ SmartInventoryAI automates inventory management through:
 
 ---
 
-## 🎯 Key Features
+## Key Features
 
-### 1. 📸 **Real-Time Visual Detection**
+### 1. **Visual Detection**
 
 Multiple ESP32-CAM cameras distributed across warehouse shelves capture images. YOLOv8 processes each frame sub-second, identifying products, quantities, and positions with configurable confidence per SKU category.
 
-### 2. 🤖 **Multi-Agent Orchestration with LangGraph**
+### 2. **Multi-Agent Orchestration with LangGraph**
 
 Four specialized agents work in coordination: InventoryAgent updates stock counts, AlertAgent generates reorders, AuditAgent logs discrepancies, and OrchestratorAgent manages decision flow. All decisions are stored for complete auditability.
 
-### 3. 🌐 **Hybrid Edge + Cloud Architecture**
+### 3. **Hybrid Edge Cloud Architecture**
 
 Local processing on Raspberry Pi minimizes latency and bandwidth. Complex computations and storage in GCP Cloud Run/Storage. Best of both worlds: fast response + cloud scalability.
 
-### 4. 💾 **Persistent Relational Database**
+### 4. **Persistent Relational Database**
 
 PostgreSQL centralizes inventory, product catalogs, audit logs, and historical metrics. Real-time queries for reports and trend analysis.
 
-### 5. 🔄 **End-to-End MLOps Pipeline**
+### 5. **End-to-End MLOps Pipeline**
 
 Automatic YOLOv8 model versioning with MLflow. Metric evaluation (mAP, precision, recall) on every commit. Retraining with new data without downtime.
 
-### 6. 🐳 **Reproducible Containerization**
+### 6. **Reproducible Containerization**
 
 Docker Compose orchestrates local services. Separate Dockerfiles for inference and agents. Identical deployments across dev/staging/prod.
 
-### 7. 📊 **Audit & Compliance**
+### 7. **Audit & Compliance**
 
 Every detection, reorder, and stock change logged with timestamp and traceability. Data integrity regulation compliance.
 
-### 8. 🔐 **IoT Security**
+### 8. **IoT Security**
 
 MQTT with TLS/SSL authentication. GCP Managed Identity with RBAC. Encryption in transit and at rest for sensitive data.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 Smart-Inventory-System/
@@ -260,7 +260,7 @@ Smart-Inventory-System/
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
@@ -358,16 +358,16 @@ docker-compose -f docker/docker-compose.yml up -d
 
 This starts:
 
-- 📊 PostgreSQL (port 5432)
-- 🔴 MQTT Broker (port 1883)
-- 🐍 FastAPI service (port 8000)
-- 📈 MLflow UI (port 5000)
+- PostgreSQL (port 5432)
+- MQTT Broker (port 1883)
+- FastAPI service (port 8000)
+- MLflow UI (port 5000)
 
 Check health: `http://localhost:8000/health`
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ### Option A: Local Test with Sample Images
 
@@ -428,7 +428,7 @@ curl -X POST http://localhost:8000/api/agents/audit \
 
 ---
 
-## 🔍 YOLOv8 Detection Pipeline
+## YOLOv8 Detection Pipeline
 
 1. **Capture:** ESP32-CAM captures frame (1920×1080, 30 FPS)
 2. **Transmit:** Sends over WiFi to Raspberry Pi
@@ -448,7 +448,7 @@ curl -X POST http://localhost:8000/api/agents/audit \
 
 ---
 
-## 🤝 LangGraph Multi-Agent Architecture
+## LangGraph Multi-Agent Architecture
 
 Four specialized agents coordinate via LangGraph state machine:
 
@@ -496,7 +496,7 @@ Four specialized agents coordinate via LangGraph state machine:
 
 ---
 
-## 📊 Model Performance Metrics
+## Model Performance Metrics
 
 | Metric | YOLOv8n | YOLOv8s | YOLOv8m | Notes |
 |--------|---------|---------|---------|-------|
@@ -507,13 +507,11 @@ Four specialized agents coordinate via LangGraph state machine:
 | **Inference Speed** | 8ms | 12ms | 18ms | Time per frame (GPU) |
 | **Parameters** | 2.7M | 6.2M | 14.1M | Model size |
 
-⚠️ **Note:** These are placeholder values using standard YOLOv8 (COCO dataset). Real metrics will be updated after training on your specific warehouse dataset.
-
 ---
 
-## 🗺️ Development Roadmap
+## Development Roadmap
 
-### **Phase 1: MVP (Months 1-3)** ✅ Foundation
+### **Phase 1: MVP (Months 1-3)** Foundation
 
 - [x] Edge + cloud architecture
 - [x] Basic YOLOv8 detector
@@ -522,7 +520,7 @@ Four specialized agents coordinate via LangGraph state machine:
 - [x] 2 initial agents (Inventory, Audit)
 - [ ] Complete documentation
 
-### **Phase 2: Edge Optimization (Months 4-6)** ⏳ Performance
+### **Phase 2: Edge Optimization (Months 4-6)** Performance
 
 - [ ] YOLOv8 quantization (INT8/FP16)
 - [ ] GPU acceleration with TensorRT
@@ -530,7 +528,7 @@ Four specialized agents coordinate via LangGraph state machine:
 - [ ] Local caching on Raspberry Pi
 - [ ] Latency reduction to <100ms
 
-### **Phase 3: Cloud Scale (Months 7-9)** 🌐 Scale
+### **Phase 3: Cloud Scale (Months 7-9)** Scale
 
 - [ ] Multi-region GCP (HA/DR)
 - [ ] Auto-scaling in Cloud Run
@@ -538,7 +536,7 @@ Four specialized agents coordinate via LangGraph state machine:
 - [ ] Multi-threshold alerts (critical/warning/info)
 - [ ] React/Vue web dashboard
 
-### **Phase 4: Production (Months 10-12)** 🚀 Enterprise
+### **Phase 4: Production (Months 10-12)** Enterprise
 
 - [ ] Compliance: GDPR, SOC2, ISO 27001
 - [ ] ERP integration (SAP, Oracle, NetSuite)
@@ -548,22 +546,7 @@ Four specialized agents coordinate via LangGraph state machine:
 
 ---
 
-## 🌍 Why This Project
-
-This project demonstrates **production-grade AIoT engineering** — not a tutorial clone. It combines:
-
-- ✅ **Real-world problem:** $1.1T annual inventory distortion
-- ✅ **Industry benchmarks:** NVIDIA, Zebra, Roboflow, Standard AI technologies
-- ✅ **Reproducible architecture:** Bicep, Terraform, Docker, GitHub Actions
-- ✅ **MLOps maturity:** Model versioning, automated evaluation, continuous retraining
-- ✅ **Multi-agent patterns:** Orchestration, state management, audit trails
-- ✅ **Hybrid edge+cloud:** Sub-100ms latency + cloud scalability
-
-Whether you're evaluating candidates for AIoT roles or learning enterprise AI patterns, this codebase demonstrates professional engineering standards.
-
----
-
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! Please:
 
@@ -590,13 +573,13 @@ This project is licensed under [MIT](LICENSE). Free to use, modify, and distribu
 
 ---
 
-## 📞 Contact
+## Contact me
 
 **Author:** Samuel Alarcón Hernández  
 **Specialty:** Electronic Engineer | AIoT Developer | Colombia 🇨🇴
 
 - 🐙 **GitHub:** [@Samuel-AI-Electronic-Engineer](https://github.com/Samuel-AI-Electronic-Engineer)
-- 💼 **LinkedIn:** [Samuel Alarcón Hernández](https://linkedin.com/in/samuel-alarcon-hernandez)
+- 💼 **LinkedIn:** [Samuel Alarcón Hernández](https://www.linkedin.com/in/samuelalarcon-ai)
 - 📝 **ORCID:** [0009-0003-4576-7651](https://orcid.org/0009-0003-4576-7651)
 - 🎓 **Professional License:** CN206-191507 (Registered Electronic Engineer)
 
